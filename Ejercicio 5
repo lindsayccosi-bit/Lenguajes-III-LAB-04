@@ -1,0 +1,201 @@
+package exercise5;
+
+class Contacto {
+    private String nombre;
+    private String telefono;
+    private String email;
+
+    public Contacto(String nombre, String telefono, String email) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        if (telefono == null || telefono.trim().isEmpty()) {
+            throw new IllegalArgumentException("El teléfono no puede estar vacío.");
+        }
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El email no puede estar vacío.");
+        }
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.email = email;
+    }
+
+    // Getters y Setters
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setTelefono(String telefono) {
+        if (telefono == null || telefono.trim().isEmpty()) {
+            throw new IllegalArgumentException("El teléfono no puede estar vacío.");
+        }
+        this.telefono = telefono;
+    }
+
+    public void setEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El email no puede estar vacío.");
+        }
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Nombre: " + nombre + ", Teléfono: " + telefono + ", Email: " + email;
+    }
+}
+
+
+
+
+package exercise5;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+class GestorContactos {
+    private List<Contacto> contactos;
+
+    public GestorContactos() {
+        this.contactos = new ArrayList<>();
+    }
+
+    // Agregar contacto
+    public void agregarContacto(Contacto c) {
+        if (c == null) {
+            throw new IllegalArgumentException("El contacto no puede ser nulo.");
+        }
+        contactos.add(c);
+        System.out.println("Contacto agregado: " + c.getNombre());
+    }
+
+    // Modificar contacto
+    public void modificarContacto(String nombre, String nuevoTelefono, String nuevoEmail) {
+        for (Contacto c : contactos) {
+            if (c.getNombre().equalsIgnoreCase(nombre)) {
+                c.setTelefono(nuevoTelefono);
+                c.setEmail(nuevoEmail);
+                System.out.println("Contacto modificado: " + c.getNombre());
+                return;
+            }
+        }
+        throw new NoSuchElementException("No se encontró el contacto con nombre: " + nombre);
+    }
+
+    // Eliminar contacto
+    public void eliminarContacto(String nombre) {
+    	// equalsIgnoreCase() compara las cadenas sin importar mayúsculas o minúsculas.
+        boolean eliminado = contactos.removeIf(c -> c.getNombre().equalsIgnoreCase(nombre));
+        if (!eliminado) {
+            throw new NoSuchElementException("No se encontró el contacto con nombre: " + nombre);
+        }
+        System.out.println("Contacto eliminado: " + nombre);
+    }
+
+    // Mostrar todos los contactos
+    public void mostrarContactos() {
+        if (contactos.isEmpty()) {
+            System.out.println("No hay contactos registrados.");
+            return;
+        }
+        System.out.println("Lista de contactos:");
+        for (Contacto c : contactos) {
+            System.out.println(c);
+        }
+    }
+}
+
+
+
+package exercise5;
+
+class Direccion {
+    private String ciudad;
+    private String calle;
+    private String numero;
+
+    public Direccion(String ciudad, String calle, String numero) {
+        this.ciudad = ciudad;
+        this.calle = calle;
+        this.numero = numero;
+    }
+
+    @Override
+    public String toString() {
+        return calle + " " + numero + ", " + ciudad;
+    }
+}
+
+// Clase adicional: Empresa
+class Empresa {
+    private String nombreEmpresa;
+    private String rubro;
+
+    public Empresa(String nombreEmpresa, String rubro) {
+        this.nombreEmpresa = nombreEmpresa;
+        this.rubro = rubro;
+    }
+
+    @Override
+    public String toString() {
+        return nombreEmpresa + " (" + rubro + ")";
+    }
+}
+
+
+package exercise5;
+import java.util.NoSuchElementException;
+
+public class Main {
+    public static void main(String[] args) {
+        GestorContactos gestor = new GestorContactos();
+
+        try {
+            // Crea y agrega contactos válidos
+            Contacto c1 = new Contacto("Ana", "123456789", "ana@mail.com");
+            Contacto c2 = new Contacto("Pedro", "987654321", "pedro@mail.com");
+
+            gestor.agregarContacto(c1);
+            gestor.agregarContacto(c2);
+
+            // Intenta crear un contacto con email vacío (lanza excepción)
+            Contacto c3 = new Contacto("Luis", "555555555", "");
+            gestor.agregarContacto(c3);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error al crear/agregar contacto: " + e.getMessage());
+        }
+
+        gestor.mostrarContactos();
+
+        try {
+            // Modifica contacto existente
+            gestor.modificarContacto("Ana", "111222333", "ana_new@mail.com");
+
+            // Intenta modificar contacto inexistente
+            gestor.modificarContacto("Carlos", "999999999", "carlos@mail.com");
+
+        } catch (NoSuchElementException | IllegalArgumentException e) {
+            System.out.println("Error al modificar: " + e.getMessage());
+        }
+
+        try {
+            // Elimina un contacto existente
+            gestor.eliminarContacto("Pedro");
+
+            // Intenta eliminar uno que no existe
+            gestor.eliminarContacto("María");
+
+        } catch (NoSuchElementException e) {
+            System.out.println("Error al eliminar: " + e.getMessage());
+        }
+
+        gestor.mostrarContactos();
+
+        // Uso de clases adicionales
+        Direccion dir = new Direccion("Lima", "Av. Siempre Viva", "742");
+        Empresa emp = new Empresa("TechSolutions", "Software");
+        System.out.println("Dirección asociada: " + dir);
+        System.out.println("Empresa asociada: " + emp);
+    }
+}
