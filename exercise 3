@@ -1,0 +1,42 @@
+// Clase Numero
+class Numero {
+    private double valor;
+
+    // Constructor
+    public Numero(double valor) {
+        setValor(valor); // usa el setter para validar
+    }
+
+    // Getter
+    public double getValor() {
+        return valor;
+    }
+
+    // Setter con validación
+    public void setValor(double valor) {
+        if (valor < 0) {
+            throw new IllegalArgumentException("El valor no puede ser negativo.");
+        }
+        this.valor = valor;
+    }
+}
+
+// Clase principal para probar Numero
+public class Main {
+    public static void main(String[] args) {
+        try {
+            Numero n1 = new Numero(10.5); // valor válido
+            System.out.println("Número creado: " + n1.getValor());
+
+            n1.setValor(25); // cambio válido
+            System.out.println("Nuevo valor: " + n1.getValor());
+
+            n1.setValor(-5); // lanza excepción
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        // Continuar el programa después del error
+        System.out.println("Programa finalizado correctamente.");
+    }
+}
